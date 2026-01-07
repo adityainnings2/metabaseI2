@@ -1,0 +1,32 @@
+version: "3.8"
+ 
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: search_sandbox
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: promotion_db
+    volumes:
+      - metabase-pg-data:/var/lib/postgresql/data
+    restart: unless-stopped
+ 
+  metabase:
+    image: metabase/metabase-enterprise:latest
+    ports:
+      - "3000:3000"
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_CONNECTION_URI: >-
+        jdbc:postgresql://db:5432/promotion_db?user=search_sandbox&password=${POSTGRES_PASSWORD}
+      MB_ENCRYPTION_SECRET_KEY: ${MB_ENCRYPTION_SECRET_KEY}
+      MB_LICENSE_KEY: ${MB_LICENSE_KEY}
+    volumes:
+      - metabase-plugins:/plugins
+    depends_on:
+      - db
+    restart: unless-stopped
+ 
+volumes:
+  metabase-pg-data:
+  metabase-plugins:
