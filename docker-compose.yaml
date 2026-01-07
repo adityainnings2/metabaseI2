@@ -17,7 +17,9 @@ services:
     restart: unless-stopped
 
   metabase:
-    image: metabase/metabase-enterprise:latest
+    # image: metabase/metabase-enterprise:latest
+    image: metabase/metabase:v0.40.6
+
     ports:
       - "3000:3000"
     environment:
